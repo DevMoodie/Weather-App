@@ -42,12 +42,21 @@ final class WeatherViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.condition, "Clear Sky")
         XCTAssertNil(viewModel.errorMessage)
     }
+    
+    func testFetchWeatherFailure() {
+        viewModel.fetchWeatherFailure(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "City not found"]))
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+        XCTAssertEqual(viewModel.temperature, "--")
+        XCTAssertEqual(viewModel.condition, "--")
+        XCTAssertEqual(viewModel.errorMessage, "City not found")
     }
 
+    func testFetchWeatherInvalidCityName() {
+        viewModel.cityName = ""
+        viewModel.fetchWeather()
+
+        XCTAssertEqual(viewModel.temperature, "--")
+        XCTAssertEqual(viewModel.condition, "--")
+        XCTAssertEqual(viewModel.errorMessage, "Invalid City Name")
+    }
 }
